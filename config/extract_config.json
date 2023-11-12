@@ -1,0 +1,17 @@
+{
+    "API": {
+        "stations": {
+            "Hilo, Hilo Bay, Kuhio Bay, HI": {
+                "ID": "1617760",
+                "DATUM": "STND"
+            }
+        },
+        "table_names": ["station_info", "water_level"],
+        "station_info_df_columns": ["station_id", "station_name", "station_LAT", "station_LON"],
+        "water_level_df_columns": ["station_id", "record_time", "water_level", "sigma", "water_level_inferred", "flat_tolerance_exceeded", "expected_water_level_exceeded"],
+        "station_info_response_columns": ["id", "name", "lat", "lon"],
+        "water_level_response_columns": ["t", "v", "s", "f[1]", "f[2]", "f[3]"]
+
+        
+    }
+}
