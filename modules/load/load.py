@@ -9,7 +9,7 @@ def connect_to_mysql(config, logger, attempts=3, delay=2):
             return mysql.connector.connect(**config)
         except (mysql.connector.Error, IOError) as err:
             if (attempts is attempt):
-                logger.info("Failed to connect, exiting without a connection: %s", err)
+                logger.error("Failed to connect, exiting without a connection: %s", err)
                 return None
             logger.info(
                 "Connection failed: %s. Retrying (%d/%d)...",
@@ -26,7 +26,6 @@ def load_to_database(cnx, logger, data, load_query):
     if cnx and cnx.is_connected():
         with cnx.cursor() as cursor:
             cursor.execute(load_query, data)
-            logger.info("Loaded data to database")
             cnx.commit()
     else:
         logger.info("Could not connect to the database")

@@ -1,2 +1,2 @@
-from modules.extract.api_request import api_request
+from modules.extract.extract import api_request
 api_request()

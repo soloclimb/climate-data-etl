@@ -1,0 +1,6 @@
+2023-11-14 17:00:27,292 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=today&station=1617760&product=water_level&datum=STND&time_zone=gmt&units=english&format=json
+2023-11-14 17:03:19,094 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=today&station=1617760&product=water_level&datum=STND&time_zone=gmt&units=english&format=json
+2023-11-14 17:06:58,991 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=today&station=1617760&product=water_level&datum=STND&time_zone=gmt&units=english&format=json
+2023-11-14 17:29:00,338 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=today&station=1617760&product=water_level&datum=STND&time_zone=gmt&units=english&format=json
+2023-11-14 17:29:00,338 - extract - CRITICAL - An unexpected error occurred: 'Response' object has no attribute 'read'
+2023-11-14 17:31:09,751 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=today&station=1617760&product=water_level&datum=STND&time_zone=gmt&units=english&format=json
