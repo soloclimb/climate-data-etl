@@ -4,3 +4,11 @@
 2023-11-14 17:29:00,338 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=today&station=1617760&product=water_level&datum=STND&time_zone=gmt&units=english&format=json
 2023-11-14 17:29:00,338 - extract - CRITICAL - An unexpected error occurred: 'Response' object has no attribute 'read'
 2023-11-14 17:31:09,751 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=today&station=1617760&product=water_level&datum=STND&time_zone=gmt&units=english&format=json
+2023-11-14 22:32:18,857 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=today&station=1617760&product=water_level&datum=STND&time_zone=gmt&units=english&format=json
+2023-11-14 22:41:38,460 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=today&station=1617760&product=water_level&datum=STND&time_zone=gmt&units=english&format=json
+2023-11-14 22:41:38,536 - extract - CRITICAL - An unexpected error occurred: 1046 (3D000): No database selected
+2023-11-14 22:43:23,544 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=today&station=1617760&product=water_level&datum=STND&time_zone=gmt&units=english&format=json
+2023-11-14 22:43:23,658 - extract - CRITICAL - An unexpected error occurred: 1046 (3D000): No database selected
+2023-11-14 22:44:30,075 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=today&station=1617760&product=water_level&datum=STND&time_zone=gmt&units=english&format=json
+2023-11-14 22:44:30,204 - extract - CRITICAL - An unexpected error occurred: 1046 (3D000): No database selected
+2023-11-14 22:48:02,150 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=today&station=1617760&product=water_level&datum=STND&time_zone=gmt&units=english&format=json

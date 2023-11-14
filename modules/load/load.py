@@ -28,4 +28,4 @@ def load_to_database(cnx, logger, data, load_query):
             cursor.execute(load_query, data)
             cnx.commit()
     else:
-        logger.info("Could not connect to the database")
+        logger.error("Could not connect to the database")
