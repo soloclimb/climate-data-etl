@@ -1,27 +1,34 @@
-import json 
+
+import xml.etree.ElementTree as ET
 import requests
+from urllib import request
 
 
-def parse_json_file(filepath):
-    with open(filepath, "r") as config_file:
-      try:
-        return json.load(config_file)
-      except json.decoder.JSONDecodeError as e:
-        print(f"Error decoding JSON: {e}")
-        print(f"File content: {config_file.read()}")
-        raise
-      
 
-def make_get_request(url, headers, logger):
-   
+
+
+
+
+def make_get_request(url, headers, logger, format):    
     try:
-        res = requests.get(url=url, headers=headers)
-        if res.status_code == 200:
-            logger.info(f"Successfull get request to url: {url}")
+        if format == 'csv':
+            response = request.urlopen(url)
+            csv_data = response.read().decode('utf-8')
+            return csv_data
         
-        res.raise_for_status()
-        return res.json()  
-
+        elif format == 'json':
+            res = requests.get(url=url, headers=headers)
+            if res.status_code == 200:
+                logger.info(f"Successfull get request to url: {url}")
+                
+            res.raise_for_status()
+                
+            return res.json()
+            
+        # elif format == 'xml':
+        #     df = pd.read_xml(url)
+        #     return df.to_dict()
+        
     except requests.exceptions.Timeout as e:
         logger.error(f"Request timed out: {e}")
         return None
@@ -34,3 +41,12 @@ def make_get_request(url, headers, logger):
     except requests.exceptions.RequestException as e:
         logger.error(f"Request failed: {e}")
         return None 
+    
+def generate_water_level_url(station_id, datum, data_format, date="today", product="product=water_level", 
+                    time_zone="time_zone=gmt", units="units=english"):
+    
+    base_url = "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
+    
+    api_url = f"{base_url}?date={date}&station={station_id}&{product}&datum={datum}&{time_zone}&{units}&format={data_format}"
+    
+    return api_url

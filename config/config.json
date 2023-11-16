@@ -17,19 +17,21 @@
         "stations": {
             "Hilo, Hilo Bay, Kuhio Bay, HI": {
                 "ID": "1617760",
-                "DATUM": "STND"
+                "DATUM": "STND",
+                "STATION_INFO_FORMAT": "json",
+                "PRODUCT_FORMAT": "csv"
             }
         },
         "table_names": ["station_info", "water_level"],
-        "station_info_df_columns": ["station_id", "station_name", "station_LAT", "station_LON"],
+        "station_info_df_columns": ["station_id", "name", "lat", "lon", "state", "timezone", "products"],
         "water_level_df_columns": ["station_id", "record_time", "water_level", "sigma", "water_level_inferred", "flat_tolerance_exceeded", "expected_water_level_exceeded"],
-        "station_info_response_columns": ["id", "name", "lat", "lon"],
+        "station_info_response_columns": ["id", "name", "lat", "lon", "state", "timezone", "products"],
         "water_level_response_columns": ["t", "v", "s", "f[1]", "f[2]", "f[3]"]
 
         
     },
     "DB_QUERIES": {
-        "station_info_load_query": "INSERT IGNORE INTO climate_data.station_info (station_id, station_name, station_LAT, station_LON) VALUES (%s, %s, %s, %s)",
+        "station_info_load_query": "INSERT IGNORE INTO climate_data.station_info (station_id, name, lat, lon, state, timezone, products) VALUES (%s, %s, %s, %s, %s, %s, %s)",
         "water_level_load_query": "INSERT IGNORE INTO climate_data.water_level (station_id, record_time, water_level, sigma, water_level_inferred, flat_tolerance_exceeded, expected_water_level_exceeded) VALUES (%s, %s, %s, %s, %s, %s, %s)"
 
     }

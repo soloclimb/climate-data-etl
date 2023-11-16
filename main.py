@@ -1,7 +1,7 @@
-from modules.extract.extract_utils import make_get_request, parse_json_file
+from modules.extract.extract_utils import make_get_request, generate_water_level_url
 from modules.logger.logger import create_logger
 from modules.load.load import connect_to_mysql, load_to_database
-from modules.transform.transform import transform_water_level_row
+from modules.transform.transform import transform_station_info, parse_json_file, transform_water_level
 from dotenv import load_dotenv
 import os
 
@@ -37,27 +37,31 @@ cnx = connect_to_mysql({"host": DB_HOST, "user": DB_USER,
 try:
     for station_name in stations:
         station_info = []
+        STATION_INFO_FORMAT = stations[station_name]["STATION_INFO_FORMAT"]
+        PRODUCT_FORMAT = stations[station_name]["PRODUCT_FORMAT"]
+        STATION_ID = stations[station_name]["ID"]
+        WATER_LEVEL_URL = generate_water_level_url(station_id=STATION_ID, 
+                                   datum=stations[station_name]["DATUM"],
+                                   data_format=PRODUCT_FORMAT,
+                                   date="latest")
+        STATION_INFO_URL = f"https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/{STATION_ID}.{STATION_INFO_FORMAT}?expand=details,products&units=english"
 
-        DATUM = stations[station_name]["DATUM"]
-        ID = stations[station_name]["ID"]
-        API_URL = f"https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=today&station={ID}&product=water_level&datum={DATUM}&time_zone=gmt&units=english&format=json"
-        
-        response = make_get_request(API_URL, HEADERS, extract_logger)
+        station_info = make_get_request(STATION_INFO_URL, HEADERS, extract_logger, STATION_INFO_FORMAT)
+        station_info = transform_station_info(station_info, STATION_INFO_FORMAT)
 
-        for col in station_info_response_columns:
-            station_info.append(response["metadata"][col])
-        
+        product = make_get_request(WATER_LEVEL_URL, HEADERS, extract_logger, PRODUCT_FORMAT)
+        product = transform_water_level(product, PRODUCT_FORMAT, STATION_ID)
+
         load_to_database(cnx=cnx, logger=load_logger, data=station_info, load_query=DB_QUERIES['station_info_load_query'])
 
-        for dct in response['data']:
-            arr = [station_info[0]]
-            transform_water_level_row(arr, dct, water_level_response_columns)
+        for arr in product:
             load_to_database(cnx=cnx, logger=load_logger, data=arr, load_query=DB_QUERIES['water_level_load_query'])
 
         load_logger.info(f"Loaded data into database for station {station_info[1]} identified by ID: {station_info[0]}")
 
 except Exception as e:
     extract_logger.critical(f"An unexpected error occurred: {e}")
+    print(e)
 
 finally:
     if cnx and cnx.is_connected():
