@@ -19,7 +19,7 @@
                 "ID": "1617760",
                 "DATUM": "STND",
                 "STATION_INFO_FORMAT": "json",
-                "PRODUCT_FORMAT": "csv"
+                "PRODUCT_FORMAT": "xml"
             }
         },
         "table_names": ["station_info", "water_level"],

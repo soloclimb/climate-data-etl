@@ -1,5 +1,4 @@
 
-import xml.etree.ElementTree as ET
 import requests
 from urllib import request
 
@@ -12,8 +11,8 @@ from urllib import request
 def make_get_request(url, headers, logger, format):    
     try:
         if format == 'csv':
-            response = request.urlopen(url)
-            csv_data = response.read().decode('utf-8')
+            res = request.urlopen(url)
+            csv_data = res.read().decode('utf-8')
             return csv_data
         
         elif format == 'json':
@@ -25,9 +24,10 @@ def make_get_request(url, headers, logger, format):
                 
             return res.json()
             
-        # elif format == 'xml':
-        #     df = pd.read_xml(url)
-        #     return df.to_dict()
+        elif format == 'xml':
+            res = requests.get(url, headers=headers)
+            print(str(res.content))
+            return res.content
         
     except requests.exceptions.Timeout as e:
         logger.error(f"Request timed out: {e}")

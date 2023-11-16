@@ -1,6 +1,7 @@
 import json 
 import csv
 from io import StringIO
+import xml.etree.ElementTree as ET
 
 def transform_water_level_row(arr, dct, response_columns):
     for col in response_columns:
@@ -12,7 +13,12 @@ def transform_water_level_row(arr, dct, response_columns):
     
 def transform_water_level(data, data_format, station_id):
     if data_format == "json": 
-       pass
+        res = []   
+        for dct in data['data']:
+           f = dct['f'].split(',')
+           res.append([station_id ,dct['t'], dct['v'], dct['s'], f[1], f[2], f[3]])
+        return res   
+
     elif data_format == "csv":
         csv_file = StringIO(data)
         reader = csv.reader(csv_file)
@@ -20,7 +26,11 @@ def transform_water_level(data, data_format, station_id):
         for row in reader:
             arr.append([station_id] + [row[x] for x in range(0, 7) if x != 3])
         return arr
-       
+    
+    elif data_format == 'xml':
+        et = ET.fromstring(data)
+        print(et)
+               
 def transform_station_info(data, data_format):
     if data_format == "json":
         data = data['stations'][0]
@@ -32,6 +42,7 @@ def transform_station_info(data, data_format):
 
         arr[-1] = arr[-1].rstrip(', ')
         return arr
+    
 def parse_json_file(filepath):
     with open(filepath, "r") as config_file:
       try:
