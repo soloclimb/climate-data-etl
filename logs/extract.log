@@ -172,3 +172,19 @@
 2023-11-16 22:41:37,790 - extract - CRITICAL - An unexpected error occurred: 'module' object is not callable
 2023-11-16 22:43:26,319 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/1617760.json?expand=details,products&units=english
 2023-11-16 22:43:27,001 - extract - CRITICAL - An unexpected error occurred: 'NoneType' object is not iterable
+2023-11-17 12:20:39,045 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/1617760.json?expand=details,products&units=english
+2023-11-17 12:20:39,629 - extract - CRITICAL - An unexpected error occurred: 'NoneType' object is not iterable
+2023-11-17 12:36:23,042 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/1617760.json?expand=details,products&units=english
+2023-11-17 12:36:23,608 - extract - CRITICAL - An unexpected error occurred: 'NoneType' object is not iterable
+2023-11-17 12:40:35,901 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/1617760.json?expand=details,products&units=english
+2023-11-17 12:40:36,503 - extract - CRITICAL - An unexpected error occurred: string indices must be integers
+2023-11-17 12:43:32,160 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/1617760.json?expand=details,products&units=english
+2023-11-17 12:43:32,763 - extract - CRITICAL - An unexpected error occurred: local variable 'dct' referenced before assignment
+2023-11-17 12:45:06,809 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/1617760.json?expand=details,products&units=english
+2023-11-17 12:50:42,509 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/1617760.json?expand=details,products&units=english
+2023-11-17 12:55:25,335 - extract - CRITICAL - An unexpected error occurred: 'module' object is not callable
+2023-11-17 12:56:12,773 - extract - CRITICAL - An unexpected error occurred: 'NoneType' object is not subscriptable
+2023-11-17 12:59:19,244 - extract - CRITICAL - An unexpected error occurred: 'products'
+2023-11-17 13:08:40,576 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/1611400.json?expand=details,products&units=english
+2023-11-17 13:08:42,165 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/1612340.json?expand=details,products&units=english
+2023-11-17 13:08:42,863 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=latest&station=1612340&product=water_level&datum=STND&time_zone=gmt&units=english&format=json

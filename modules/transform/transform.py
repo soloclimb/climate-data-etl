@@ -1,7 +1,7 @@
 import json 
 import csv
 from io import StringIO
-import xml.etree.ElementTree as ET
+import xmltodict
 
 def transform_water_level_row(arr, dct, response_columns):
     for col in response_columns:
@@ -28,20 +28,25 @@ def transform_water_level(data, data_format, station_id):
         return arr
     
     elif data_format == 'xml':
-        et = ET.fromstring(data)
-        print(et)
+        data = xmltodict.parse(data)['data']['observations']['wl']
+        f = data['@f'].split(',')
+        return [[station_id ,data['@t'], data['@v'], data['@s'], f[1], f[2], f[3]]]
                
 def transform_station_info(data, data_format):
     if data_format == "json":
         data = data['stations'][0]
-        arr = [data['id'], data['name'], data['lat'], data['lng'],data['state'], data['timezonecorr'], '']
         products = data['products']['products']
-        for i in range(0, len(products)):
-            arr[-1] += f"{products[i]['name']}, "
         
+    elif data_format == 'xml':
+        data = xmltodict.parse(data)['Stations']['Station']
+        products = data['products']['Product']
 
-        arr[-1] = arr[-1].rstrip(', ')
-        return arr
+    arr = [data['id'], data['name'], data['lat'], data['lng'],data['state'], data['timezonecorr'], '']
+    for i in range(0, len(products)):
+        arr[-1] += f"{products[i]['name']}, "
+    
+    arr[-1] = arr[-1].rstrip(', ')
+    return arr
     
 def parse_json_file(filepath):
     with open(filepath, "r") as config_file:

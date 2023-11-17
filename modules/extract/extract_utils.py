@@ -1,12 +1,5 @@
-
 import requests
 from urllib import request
-
-
-
-
-
-
 
 def make_get_request(url, headers, logger, format):    
     try:
@@ -23,11 +16,11 @@ def make_get_request(url, headers, logger, format):
             res.raise_for_status()
                 
             return res.json()
-            
         elif format == 'xml':
-            res = requests.get(url, headers=headers)
-            print(str(res.content))
-            return res.content
+            res = request.urlopen(url)
+            data = res.read()
+            res.close()
+            return data
         
     except requests.exceptions.Timeout as e:
         logger.error(f"Request timed out: {e}")
