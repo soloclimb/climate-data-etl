@@ -453,3 +453,42 @@
 2023-11-17 13:08:39,856 - load - INFO - Loaded data into database for station Hilo, Hilo Bay, Kuhio Bay identified by ID: 1617760
 2023-11-17 13:08:41,464 - load - INFO - Loaded data into database for station Nawiliwili identified by ID: 1611400
 2023-11-17 13:08:43,006 - load - INFO - Loaded data into database for station Honolulu identified by ID: 1612340
+2023-11-17 22:20:46,699 - load - INFO - Connection failed: 2003 (HY000): Can't connect to MySQL server on '192.168.0.106:3306' (113). Retrying (1/2)...
+2023-11-17 22:20:49,771 - load - INFO - Connection failed: 2003 (HY000): Can't connect to MySQL server on '192.168.0.106:3306' (113). Retrying (2/2)...
+2023-11-17 22:20:56,843 - load - ERROR - Failed to connect, exiting without a connection: 2003 (HY000): Can't connect to MySQL server on '192.168.0.106:3306' (113)
+2023-11-17 22:20:58,418 - load - ERROR - Could not connect to the database
+2023-11-17 22:20:58,418 - load - ERROR - Could not connect to the database
+2023-11-17 22:20:58,418 - load - INFO - Loaded data into database for station Hilo, Hilo Bay, Kuhio Bay identified by ID: 1617760
+2023-11-17 22:20:59,724 - load - ERROR - Could not connect to the database
+2023-11-17 22:20:59,724 - load - ERROR - Could not connect to the database
+2023-11-17 22:20:59,724 - load - INFO - Loaded data into database for station Nawiliwili identified by ID: 1611400
+2023-11-17 22:21:01,038 - load - ERROR - Could not connect to the database
+2023-11-17 22:21:01,038 - load - ERROR - Could not connect to the database
+2023-11-17 22:21:01,038 - load - INFO - Loaded data into database for station Honolulu identified by ID: 1612340
+2023-11-17 22:25:39,075 - load - INFO - Loaded data into database for station Hilo, Hilo Bay, Kuhio Bay identified by ID: 1617760
+2023-11-17 22:25:40,396 - load - INFO - Loaded data into database for station Nawiliwili identified by ID: 1611400
+2023-11-17 22:25:41,838 - load - INFO - Loaded data into database for station Honolulu identified by ID: 1612340
+2023-11-17 22:28:01,998 - load - INFO - Connection failed: 2003 (HY000): Can't connect to MySQL server on '192.168.0.106:3306' (111). Retrying (1/2)...
+2023-11-17 22:28:04,146 - load - INFO - Connection failed: 2003 (HY000): Can't connect to MySQL server on '192.168.0.106:3306' (111). Retrying (2/2)...
+2023-11-17 22:28:08,345 - load - ERROR - Failed to connect, exiting without a connection: 2003 (HY000): Can't connect to MySQL server on '192.168.0.106:3306' (111)
+2023-11-17 22:28:09,815 - load - ERROR - Could not connect to the database
+2023-11-17 22:28:09,815 - load - ERROR - Could not connect to the database
+2023-11-17 22:28:09,816 - load - INFO - Loaded data into database for station Hilo, Hilo Bay, Kuhio Bay identified by ID: 1617760
+2023-11-17 22:28:11,050 - load - ERROR - Could not connect to the database
+2023-11-17 22:28:11,050 - load - ERROR - Could not connect to the database
+2023-11-17 22:28:11,050 - load - INFO - Loaded data into database for station Nawiliwili identified by ID: 1611400
+2023-11-17 22:28:12,387 - load - ERROR - Could not connect to the database
+2023-11-17 22:28:12,388 - load - ERROR - Could not connect to the database
+2023-11-17 22:28:12,388 - load - INFO - Loaded data into database for station Honolulu identified by ID: 1612340
+2023-11-17 22:28:53,647 - load - INFO - Connection failed: 2003 (HY000): Can't connect to MySQL server on '192.168.0.106:3306' (111). Retrying (1/2)...
+2023-11-17 22:28:55,756 - load - INFO - Connection failed: 2003 (HY000): Can't connect to MySQL server on '192.168.0.106:3306' (111). Retrying (2/2)...
+2023-11-17 22:29:00,098 - load - ERROR - Failed to connect, exiting without a connection: 2003 (HY000): Can't connect to MySQL server on '192.168.0.106:3306' (111)
+2023-11-17 22:29:01,195 - load - ERROR - Could not connect to the database
+2023-11-17 22:29:01,196 - load - ERROR - Could not connect to the database
+2023-11-17 22:29:01,196 - load - INFO - Loaded data into database for station Hilo, Hilo Bay, Kuhio Bay identified by ID: 1617760
+2023-11-17 22:29:02,387 - load - ERROR - Could not connect to the database
+2023-11-17 22:29:02,387 - load - ERROR - Could not connect to the database
+2023-11-17 22:29:02,387 - load - INFO - Loaded data into database for station Nawiliwili identified by ID: 1611400
+2023-11-17 22:29:03,673 - load - ERROR - Could not connect to the database
+2023-11-17 22:29:03,673 - load - ERROR - Could not connect to the database
+2023-11-17 22:29:03,673 - load - INFO - Loaded data into database for station Honolulu identified by ID: 1612340

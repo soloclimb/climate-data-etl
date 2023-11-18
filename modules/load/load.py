@@ -22,10 +22,15 @@ def connect_to_mysql(config, logger, attempts=3, delay=2):
             attempt += 1
     return None
 
-def load_to_database(cnx, logger, data, load_query):    
+def load_to_database(cnx, logger, data, load_query, successful_load):    
     if cnx and cnx.is_connected():
         with cnx.cursor() as cursor:
-            cursor.execute(load_query, data)
-            cnx.commit()
+            try:
+                cursor.execute(load_query, data)
+                cnx.commit()
+            except mysql.connector.Error as e:
+                logger.error(f"Failed to load, MySQL Error: {e}")
+                cnx.rollback()
+                successful_load = False
     else:
         logger.error("Could not connect to the database")

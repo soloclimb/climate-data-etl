@@ -188,3 +188,15 @@
 2023-11-17 13:08:40,576 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/1611400.json?expand=details,products&units=english
 2023-11-17 13:08:42,165 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/1612340.json?expand=details,products&units=english
 2023-11-17 13:08:42,863 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=latest&station=1612340&product=water_level&datum=STND&time_zone=gmt&units=english&format=json
+2023-11-17 22:20:59,139 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/1611400.json?expand=details,products&units=english
+2023-11-17 22:21:00,403 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/1612340.json?expand=details,products&units=english
+2023-11-17 22:21:01,036 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=latest&station=1612340&product=water_level&datum=STND&time_zone=gmt&units=english&format=json
+2023-11-17 22:25:39,718 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/1611400.json?expand=details,products&units=english
+2023-11-17 22:25:41,041 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/1612340.json?expand=details,products&units=english
+2023-11-17 22:25:41,702 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=latest&station=1612340&product=water_level&datum=STND&time_zone=gmt&units=english&format=json
+2023-11-17 22:28:10,468 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/1611400.json?expand=details,products&units=english
+2023-11-17 22:28:11,735 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/1612340.json?expand=details,products&units=english
+2023-11-17 22:28:12,386 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=latest&station=1612340&product=water_level&datum=STND&time_zone=gmt&units=english&format=json
+2023-11-17 22:29:01,848 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/1611400.json?expand=details,products&units=english
+2023-11-17 22:29:03,024 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/1612340.json?expand=details,products&units=english
+2023-11-17 22:29:03,671 - extract - INFO - Successfull get request to url: https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=latest&station=1612340&product=water_level&datum=STND&time_zone=gmt&units=english&format=json

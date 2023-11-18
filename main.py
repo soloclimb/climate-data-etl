@@ -52,12 +52,14 @@ try:
         product = make_get_request(WATER_LEVEL_URL, HEADERS, extract_logger, PRODUCT_FORMAT)
         product = transform_water_level(product, PRODUCT_FORMAT, STATION_ID)
 
-        load_to_database(cnx=cnx, logger=load_logger, data=station_info, load_query=DB_QUERIES['station_info_load_query'])
+        successful_load = True
+
+        load_to_database(cnx=cnx, logger=load_logger, data=station_info, load_query=DB_QUERIES['station_info_load_query'], successful_load=successful_load)
 
         for arr in product:
-            load_to_database(cnx=cnx, logger=load_logger, data=arr, load_query=DB_QUERIES['water_level_load_query'])
-
-        load_logger.info(f"Loaded data into database for station {station_info[1]} identified by ID: {station_info[0]}")
+            load_to_database(cnx=cnx, logger=load_logger, data=arr, load_query=DB_QUERIES['water_level_load_query'], successful_load=successful_load)
+        if successful_load:
+            load_logger.info(f"Loaded data into database for station {station_info[1]} identified by ID: {station_info[0]}")
 
 except Exception as e:
     extract_logger.critical(f"An unexpected error occurred: {e}")
