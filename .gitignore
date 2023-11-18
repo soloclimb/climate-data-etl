@@ -2,3 +2,4 @@ __pycache__/
 virt/*
 db_config.json
 .env
+logs/*
