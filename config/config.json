@@ -14,37 +14,51 @@
         "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/119.0"
     },
     "API": {
-        "stations": {
-            "Hilo, Hilo Bay, Kuhio Bay, HI": {
-                "ID": "1617760",
-                "DATUM": "STND",
-                "STATION_INFO_FORMAT": "xml",
-                "PRODUCT_FORMAT": "xml"
-            },
-            "Nawiliwili, HI": {
-                "ID": "1611400",
-                "DATUM": "STND",
-                "STATION_INFO_FORMAT": "json",
-                "PRODUCT_FORMAT": "csv"
-            },
-            "Honolulu, HI": {
-                "ID": "1612340",
-                "DATUM": "STND",
-                "STATION_INFO_FORMAT": "json",
-                "PRODUCT_FORMAT": "json"
+        "wl": {
+            "stations": {
+                "Hilo, Hilo Bay, Kuhio Bay, HI": {
+                    "ID": "1617760",
+                    "DATUM": "STND",
+                    "STATION_INFO_FORMAT": "xml",
+                    "PRODUCT_FORMAT": "xml",
+                    "DATE": "latest"
+                },
+                "Nawiliwili, HI": {
+                    "ID": "1611400",
+                    "DATUM": "STND",
+                    "STATION_INFO_FORMAT": "json",
+                    "PRODUCT_FORMAT": "csv",
+                    "DATE": "latest"
+                },
+                "Honolulu, HI": {
+                    "ID": "1612340",
+                    "DATUM": "STND",
+                    "STATION_INFO_FORMAT": "json",
+                    "PRODUCT_FORMAT": "json",
+                    "DATE": "latest"
+                }
             }
         },
-        "table_names": ["station_info", "water_level"],
-        "station_info_df_columns": ["station_id", "name", "lat", "lon", "state", "timezone", "products"],
-        "water_level_df_columns": ["station_id", "record_time", "water_level", "sigma", "water_level_inferred", "flat_tolerance_exceeded", "expected_water_level_exceeded"],
+        "wt": {
+            "stations": {
+                "Kawaihae, HI": {
+                    "ID": "1617433",
+                    "DATUM": "STND",
+                    "STATION_INFO_FORMAT": "json",
+                    "PRODUCT_FORMAT": "json",
+                    "DATE": "latest"
+                }
+            }
+        },
         "station_info_response_columns": ["id", "name", "lat", "lon", "state", "timezone", "products"],
-        "water_level_response_columns": ["t", "v", "s", "f[1]", "f[2]", "f[3]"]
-
+        "wl_response_columns": ["t", "v", "s", "f[1]", "f[2]", "f[3]"],
+        "wt_response_columns": ["t", "v", "f[0]", "f[1]", "f[2]"]
         
     },
     "DB_QUERIES": {
         "station_info_load_query": "INSERT IGNORE INTO climate_data.station_info (station_id, name, lat, lon, state, timezone, products) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-        "water_level_load_query": "INSERT IGNORE INTO climate_data.water_level (station_id, record_time, water_level, sigma, water_level_inferred, flat_tolerance_exceeded, expected_water_level_exceeded) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        "wl_load_query": "INSERT IGNORE INTO climate_data.water_level (station_id, record_time, water_level, sigma, water_level_inferred, flat_tolerance_exceeded, expected_water_level_exceeded) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+        "wt_load_query": "INSERT IGNORE INTO climate_data.water_temperature (station_id, record_time, water_temperature, max_conductivity_exceeded, min_conductivity_exceeded, change_tolerance_limit_exceeded) VALUES (%s, %s, %s, %s, %s, %s)"
 
     }
 }

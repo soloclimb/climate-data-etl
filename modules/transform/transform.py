@@ -1,4 +1,3 @@
-import json 
 import csv
 from io import StringIO
 import xmltodict
@@ -31,7 +30,28 @@ def transform_water_level(data, data_format, station_id):
         data = xmltodict.parse(data)['data']['observations']['wl']
         f = data['@f'].split(',')
         return [[station_id ,data['@t'], data['@v'], data['@s'], f[1], f[2], f[3]]]
-               
+
+def transform_water_temperature(data, data_format, station_id):
+    if data_format == "json": 
+        res = []   
+        for dct in data['data']:
+           f = dct['f'].split(',')
+           res.append([station_id ,dct['t'], dct['v'], f[0], f[1], f[2]])
+        return res   
+
+    elif data_format == "csv":
+        csv_file = StringIO(data)
+        reader = csv.reader(csv_file)
+        arr = []
+        for row in reader:
+            arr.append([station_id] + row)
+        return arr
+    
+    elif data_format == 'xml':
+        data = xmltodict.parse(data)['data']['observations']['wt']
+        f = data['@f'].split(',')
+        return [[station_id ,data['@t'], data['@v'], f[0], f[1], f[2]]]     
+
 def transform_station_info(data, data_format):
     if data_format == "json":
         data = data['stations'][0]
@@ -48,12 +68,3 @@ def transform_station_info(data, data_format):
     arr[-1] = arr[-1].rstrip(', ')
     return arr
     
-def parse_json_file(filepath):
-    with open(filepath, "r") as config_file:
-      try:
-        return json.load(config_file)
-      except json.decoder.JSONDecodeError as e:
-        print(f"Error decoding JSON: {e}")
-        print(f"File content: {config_file.read()}")
-        raise
-      
