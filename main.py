@@ -1,18 +1,13 @@
-from modules.extract.extract import make_get_request, generate_station_info_url , generate_product_url
-from modules.logger.logger import create_logger
-from modules.load.load import connect_to_mysql, load_to_database
-from modules.transform.transform import transform_station_info, transform_water_level, transform_water_temperature
+from scripts.extract.extract import make_get_request, generate_station_info_url , generate_product_url
+from scripts.logger.logger import create_logger
+from scripts.load.load import connect_to_mysql, load_to_database
+from scripts.transform.transform import transform_station_info, transform_water_level, transform_water_temperature
 from dotenv import load_dotenv
 import os
-
-from modules.utils.parse_config import parse_product_config
+from scripts.utils.parse_config import parse_product_config
 
 load_dotenv()
 
-DB_HOST = os.getenv("DB_HOST")
-DB_USER = os.getenv("DB_USER")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-DATABASE = os.getenv("DB_DATABASE")
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 config_path = os.path.join(current_dir, "config", "config.json")
@@ -26,8 +21,31 @@ extract_logger = create_logger("extract", log_files_path)
 
 cnx = connect_to_mysql({"host": DB_HOST, "user": DB_USER, 
                         "password": DB_PASSWORD, "database": DATABASE}, load_logger)
+def etl():
+        
 
 def etl(product_type, product_config):
+    load_dotenv()
+
+    DB_HOST = os.getenv("DB_HOST")
+    DB_USER = os.getenv("DB_USER")
+    DB_PASSWORD = os.getenv("DB_PASSWORD")
+    DATABASE = os.getenv("DB_DATABASE")
+
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    config_path = os.path.join(current_dir, "config", "config.json")
+    log_files_path = os.path.join(current_dir, "logs")
+
+    wl_config = parse_product_config(config_path, "wl")
+    wt_config = parse_product_config(config_path, "wt")
+
+    load_logger = create_logger("load", log_files_path)
+    extract_logger = create_logger("extract", log_files_path)
+
+    cnx = connect_to_mysql({"host": DB_HOST, "user": DB_USER, 
+                            "password": DB_PASSWORD, "database": DATABASE}, load_logger)
+    product_type = "wl"
+    product_config = wl_config
     try:
         for station_name in product_config['stations']:
             station = product_config['stations'][station_name]
@@ -57,11 +75,10 @@ def etl(product_type, product_config):
 
     except Exception as e:
         extract_logger.critical(f"An unexpected error occurred: {e}")
-        print(e)
 
 
 # etl("wl", wl_config)
-etl("wt", wt_config)
+# etl("wt", wt_config)
 
 
 if cnx and cnx.is_connected():

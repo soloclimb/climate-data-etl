@@ -1,6 +1,7 @@
 import requests
 from urllib import request
 
+
 def make_get_request(url, headers, logger, format):    
     try:
         if format == 'csv':
