@@ -81,7 +81,7 @@ def _transform_water_level(**kwargs):
     if data_format == "json": 
         for dct in data['data']:
            f = dct['f'].split(',')
-           return [station_id , str(datetime.today().strftime('%Y-%m-%d')) +" " +dct['t'] + ":00", dct['v'], dct['s'], station_id,f[1], f[2], f[3]]
+           return [station_id , str(datetime.today().strftime('%Y-%m-%d')) + " " +dct['t'] + ":00", dct['v'], dct['s'], f[1], f[2], f[3]]
         # return res   
 
     elif data_format == "csv":
@@ -100,13 +100,14 @@ def _transform_water_level(**kwargs):
 def _load_to_mysql(**kwargs):
     ti = kwargs['ti']
 
-    insert_data = ti.xcom_pull(task_ids='transform_data')
-    values_str = ', '.join([str(value) for value in insert_data])
-    query = f"INSERT IGNORE INTO climate_data.water_level (station_id, record_time, water_level, sigma, water_level_inferred, flat_tolerance_exceeded, expected_water_level_exceeded) VALUES ({values_str})"
+    insert_data = list(ti.xcom_pull(task_ids='transform_data'))
+    query = "INSERT IGNORE INTO climate_data.water_level (station_id, record_time, water_level, sigma, water_level_inferred, flat_tolerance_exceeded, expected_water_level_exceeded) VALUES (%s, %s, %s, %s, %s, %s, %s)",
 
     hook = MySqlHook(mysql_conn_id='climate-data-mysql')
-    hook.run(query, autocommit=True)
-
+    cursor = hook.get_cursor()
+    cursor.executemany(query, insert_data)
+    hook.commit()
+    hook.close()
    
 with DAG("my_elt", start_date=datetime(2023, 11, 23), 
          schedule_interval="*/6 * * * *", catchup=False) as dag:
