@@ -10,6 +10,10 @@ import requests
 from urllib import request
 import csv
 from io import StringIO
+import logging    
+
+
+
 # import xmltodict
 
 def _create_config():
@@ -29,7 +33,7 @@ def _create_config():
               'product_url': product_url,
               'product_format': station["PRODUCT_FORMAT"],
               'station_info_format': station["STATION_INFO_FORMAT"],
-              'station_id': station['ID']}
+              'station_id': station["ID"]}
 
 def _extract_data(**kwargs):
     ti = kwargs['ti']
@@ -49,7 +53,7 @@ def _extract_data(**kwargs):
                 print(f"Successfull get request to url: {url}")
                 
             res.raise_for_status()
-                
+            logging.info(res.json())    
             return res.json()
         elif format == 'xml':
             res = request.urlopen(url)
@@ -78,10 +82,14 @@ def _transform_water_level(**kwargs):
     headers = config['headers']
     station_id = config['station_id']
     data = ti.xcom_pull(task_ids='extract_data')
-    if data_format == "json": 
+    if data_format == "json":
+        res = [] 
         for dct in data['data']:
            f = dct['f'].split(',')
-           return [station_id , str(datetime.today().strftime('%Y-%m-%d')) + " " +dct['t'] + ":00", dct['v'], dct['s'], f[1], f[2], f[3]]
+           logging.info((station_id, str(datetime.today().strftime('%Y-%m-%d')) + " " + dct['t'] + ":00", dct['v'], dct['s'], f[1], f[2], f[3]))
+           return [station_id, dct['t'] + ":00", dct['v'], dct['s'], f[1], f[2], f[3]]
+        #    logging.info(res)
+           
         # return res   
 
     elif data_format == "csv":
@@ -101,13 +109,17 @@ def _load_to_mysql(**kwargs):
     ti = kwargs['ti']
 
     insert_data = list(ti.xcom_pull(task_ids='transform_data'))
-    query = "INSERT IGNORE INTO climate_data.water_level (station_id, record_time, water_level, sigma, water_level_inferred, flat_tolerance_exceeded, expected_water_level_exceeded) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+    query = "INSERT IGNORE INTO climate_data.water_level (station_id, record_time, water_level, sigma, water_level_inferred, flat_tolerance_exceeded, expected_water_level_exceeded) VALUES (%s, %s, %s, %s, %s, %s, %s)"
 
     hook = MySqlHook(mysql_conn_id='climate-data-mysql')
-    cursor = hook.get_cursor()
-    cursor.executemany(query, insert_data)
-    hook.commit()
-    hook.close()
+    conn = hook.get_conn()
+    cursor = conn.cursor()
+
+    logging.info(insert_data)
+    cursor.execute(query, insert_data)
+    conn.commit()
+    cursor.close()
+    conn.close()
    
 with DAG("my_elt", start_date=datetime(2023, 11, 23), 
          schedule_interval="*/6 * * * *", catchup=False) as dag:

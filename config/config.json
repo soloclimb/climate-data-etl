@@ -33,6 +33,26 @@
                     "STATION_INFO_FORMAT": "json",
                     "PRODUCT_FORMAT": "json",
                     "DATE": "latest"
+                },
+                "Hilo, Hilo Bay, Kuhio Bay, HI": {
+                    "ID": "1617760",
+                    "DATUM": "STND",
+                    "STATION_INFO_FORMAT": "json",
+                    "PRODUCT_FORMAT": "json",
+                    "DATE": "latest"
+                },
+                "Honolulu, HI": {
+                    "ID": "1612340",
+                    "DATUM": "STND",
+                    "STATION_INFO_FORMAT": "json",
+                    "PRODUCT_FORMAT": "json",
+                    "DATE": "latest"
+                },"Nawiliwili, HI": {
+                    "ID": "1611400",
+                    "DATUM": "STND",
+                    "STATION_INFO_FORMAT": "json",
+                    "PRODUCT_FORMAT": "json",
+                    "DATE": "latest"
                 }
             }
         },
