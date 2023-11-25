@@ -22,26 +22,14 @@
                     "STATION_INFO_FORMAT": "json",
                     "PRODUCT_FORMAT": "json",
                     "DATE": "latest"
-                }
-            }
-        },
-        "wt": {
-            "stations": {
+                },
                 "Kawaihae, HI": {
                     "ID": "1617433",
                     "DATUM": "STND",
                     "STATION_INFO_FORMAT": "json",
                     "PRODUCT_FORMAT": "json",
                     "DATE": "latest"
-                },
-                "Hilo, Hilo Bay, Kuhio Bay, HI": {
-                    "ID": "1617760",
-                    "DATUM": "STND",
-                    "STATION_INFO_FORMAT": "json",
-                    "PRODUCT_FORMAT": "json",
-                    "DATE": "latest"
-                },
-                "Honolulu, HI": {
+                },"Honolulu, HI": {
                     "ID": "1612340",
                     "DATUM": "STND",
                     "STATION_INFO_FORMAT": "json",
@@ -54,6 +42,11 @@
                     "PRODUCT_FORMAT": "json",
                     "DATE": "latest"
                 }
+            }
+        },
+        "wt": {
+            "stations": {
+                
             }
         },
         "station_info_response_columns": ["id", "name", "lat", "lon", "state", "timezone", "products"],
