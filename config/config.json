@@ -26,14 +26,14 @@
                 "Kawaihae, HI": {
                     "ID": "1617433",
                     "DATUM": "STND",
-                    "STATION_INFO_FORMAT": "json",
-                    "PRODUCT_FORMAT": "json",
+                    "STATION_INFO_FORMAT": "xml",
+                    "PRODUCT_FORMAT": "csv",
                     "DATE": "latest"
                 },"Honolulu, HI": {
                     "ID": "1612340",
                     "DATUM": "STND",
                     "STATION_INFO_FORMAT": "json",
-                    "PRODUCT_FORMAT": "json",
+                    "PRODUCT_FORMAT": "xml",
                     "DATE": "latest"
                 },"Nawiliwili, HI": {
                     "ID": "1611400",

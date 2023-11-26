@@ -11,10 +11,7 @@ from urllib import request
 import csv
 from io import StringIO
 import logging    
-
-
-
-# import xmltodict
+import xmltodict
 
 def _create_config():
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -68,10 +65,10 @@ def _extract_data(**kwargs):
 
             elif format == 'xml':
                 res = request.urlopen(station_url)
-                station_info(res.read())
+                station_info.append(res.read())
                 res.close()
                 res = request.urlopen(product_url)
-                product_data(res.read())
+                product_data.append(res.read())
                 res.close()
         
         except requests.exceptions.Timeout as e:
@@ -100,20 +97,22 @@ def _transform_station_info(**kwargs):
     res = []
     for i in range(0, len(stations)):
 
+        products, data = [], []
         if stations[i]['STATION_INFO_FORMAT'] == "json":
             data = station_info[i]['stations'][0]
             products = data['products']['products']
             
-        # elif station['STATION_INFO_FORMAT'] == 'xml':
-        #     data = xmltodict.parse(data)['Stations']['Station']
-        #     products = data['products']['Product']
+        elif stations[i]['STATION_INFO_FORMAT'] == 'xml':
+            data = xmltodict.parse(data)['Stations']['Station']
+            products = data['products']['Product']
 
-            arr = [data['id'], data['name'], data['lat'], data['lng'],data['state'], data['timezonecorr'], '']
-            for i in range(0, len(products)):
-                arr[-1] += f"{products[i]['name']}, "
-            
-            arr[-1] = arr[-1].rstrip(', ')
-            res.append(arr)
+        arr = [data['id'], data['name'], data['lat'], data['lng'],data['state'], data['timezonecorr'], '']
+        for i in range(0, len(products)):
+            arr[-1] += f"{products[i]['name']}, "
+        
+        arr[-1] = arr[-1].rstrip(', ')
+        res.append(arr)
+
     return res
 
 def _transform_water_level(**kwargs):
@@ -123,15 +122,13 @@ def _transform_water_level(**kwargs):
     data = ti.xcom_pull(task_ids='extract_data')['product_data']
 
     for station in stations:
+        station_id = station['ID']
         res = []
         if station['PRODUCT_FORMAT'] == "json":
             for dct in data:
-                station_id = dct['metadata']['id']
                 dct = dct['data'][0]
                 f = dct['f'].split(',')
-                res.append([station_id, dct['t'] + ":00", dct['v'], dct['s'], f[1], f[2], f[3]])
-            
-            
+                res.append([station_id, dct['t'] + ":00", dct['v'], dct['s'], f[1], f[2], f[3]])                        
 
         elif station['PRODUCT_FORMAT'] == "csv":
             csv_file = StringIO(data)
@@ -139,11 +136,13 @@ def _transform_water_level(**kwargs):
             for row in reader:
                 res.append([station['ID']] + [row[x] for x in range(0, 7) if x != 3])
         
-        # elif station['PRODUCT_FORMAT'] == 'xml':
-        #     data = xmltodict.parse(data)['data']['observations']['wl']
-        #     f = data['@f'].split(',')
-        #     return [[station_id ,data['@t'], data['@v'], data['@s'], f[1], f[2], f[3]]]
+        elif station['PRODUCT_FORMAT'] == 'xml':
+            data = xmltodict.parse(data)['data']['observations']['wl']
+            f = data['@f'].split(',')
+            res.append([station_id ,data['@t'], data['@v'], data['@s'], f[1], f[2], f[3]])
+
         return res
+    
 def _load_station_info(**kwargs):
     ti = kwargs['ti']
 
@@ -182,7 +181,7 @@ def _load_wl(**kwargs):
     cursor.close()
     conn.close()
    
-with DAG("my_elt", start_date=datetime(2023, 11, 23), 
+with DAG("climate-data-elt", start_date=datetime(2023, 11, 23), 
          schedule_interval="*/6 * * * *", catchup=False) as dag:
     
     create_config = PythonOperator(
