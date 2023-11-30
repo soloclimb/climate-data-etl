@@ -1,8 +1,6 @@
 from airflow import DAG 
 from airflow.operators.python import PythonOperator 
 from airflow.hooks.mysql_hook import MySqlHook
-from airflow.models.taskinstance import TaskInstance
-from airflow.operators.mysql_operator import MySqlOperator 
 from datetime import datetime
 import os 
 import json
@@ -45,44 +43,45 @@ def _extract_data(**kwargs):
     for i in range(0, len(stations)):
         station_url = station_urls[i]
         product_url = product_urls[i]
-        format = stations[i]['PRODUCT_FORMAT']
+        product_format = stations[i]['PRODUCT_FORMAT']
+        station_info_format = stations[i]['STATION_INFO_FORMAT']
         try:
-            if format == 'csv':
+            if station_info_format == 'csv':
                 res = request.urlopen(station_url)
-                csv_data = res.read().decode('utf-8')
-                station_info.append(csv_data)
-
-                res = request.urlopen(product_url)
-                csv_data = res.read().decode('utf-8')
-                product_data.append(csv_data)
+                station_info.append(res.read().decode('utf-8'))
+                
+            elif station_info_format == 'json':
             
-            elif format == 'json':
                 res = requests.get(url=station_url, headers=headers)
                 station_info.append(res.json())
+           
+            elif station_info_format == 'xml':
+                res = request.urlopen(station_url)
+                station_info.append(res.read().decode('utf-8'))
+                res.close()
 
+            
+            if product_format == 'csv':
+                res = request.urlopen(product_url)
+                product_data.append(res.read().decode('utf-8'))
+            
+            elif product_format == 'json':
                 res = requests.get(url=product_url, headers=headers)
                 product_data.append(res.json())
 
-            elif format == 'xml':
-                res = request.urlopen(station_url)
-                station_info.append(res.read())
-                res.close()
+            elif product_format == 'xml':
                 res = request.urlopen(product_url)
-                product_data.append(res.read())
+                product_data.append(res.read().decode('utf-8'))
                 res.close()
         
         except requests.exceptions.Timeout as e:
-            print(f"Request timed out: {e}")
-            return None
+            logging.error(f"Request timed out: {e}")
         except requests.exceptions.HTTPError as e:
-            print(f"HTTP error occured: {e}")
-            return None  
+            logging.error(f"HTTP error occured: {e}")  
         except requests.exceptions.ConnectionError as e:
-            print(f"Failed to establish a connection: {e}")
-            return None 
+            logging.error(f"Failed to establish a connection: {e}") 
         except requests.exceptions.RequestException as e:
-            print(f"Request failed: {e}")
-            return None 
+            logging.error(f"Request failed: {e}") 
         
     return {'station_info': station_info, 'product_data': product_data}
 
@@ -103,7 +102,7 @@ def _transform_station_info(**kwargs):
             products = data['products']['products']
             
         elif stations[i]['STATION_INFO_FORMAT'] == 'xml':
-            data = xmltodict.parse(data)['Stations']['Station']
+            data = xmltodict.parse(station_info[i])['Stations']['Station']
             products = data['products']['Product']
 
         arr = [data['id'], data['name'], data['lat'], data['lng'],data['state'], data['timezonecorr'], '']
@@ -120,7 +119,7 @@ def _transform_water_level(**kwargs):
     config = ti.xcom_pull(task_ids='create_config')
     stations = config['stations']
     data = ti.xcom_pull(task_ids='extract_data')['product_data']
-
+    i = 0
     for station in stations:
         station_id = station['ID']
         res = []
@@ -131,16 +130,16 @@ def _transform_water_level(**kwargs):
                 res.append([station_id, dct['t'] + ":00", dct['v'], dct['s'], f[1], f[2], f[3]])                        
 
         elif station['PRODUCT_FORMAT'] == "csv":
-            csv_file = StringIO(data)
+            csv_file = StringIO(data[i])
             reader = csv.reader(csv_file)
             for row in reader:
                 res.append([station['ID']] + [row[x] for x in range(0, 7) if x != 3])
         
         elif station['PRODUCT_FORMAT'] == 'xml':
-            data = xmltodict.parse(data)['data']['observations']['wl']
+            data = xmltodict.parse(data[i])['data']['observations']['wl']
             f = data['@f'].split(',')
             res.append([station_id ,data['@t'], data['@v'], data['@s'], f[1], f[2], f[3]])
-
+        i += 1
         return res
     
 def _load_station_info(**kwargs):
@@ -181,7 +180,7 @@ def _load_wl(**kwargs):
     cursor.close()
     conn.close()
    
-with DAG("climate-data-elt", start_date=datetime(2023, 11, 23), 
+with DAG("climate_data_DAG", start_date=datetime(2023, 11, 30), 
          schedule_interval="*/6 * * * *", catchup=False) as dag:
     
     create_config = PythonOperator(
