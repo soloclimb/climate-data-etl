@@ -1,16 +1,17 @@
 import csv
-from io import StringIO
 import xmltodict
-
-def transform_water_level_row(arr, dct, response_columns):
+from io import StringIO
+from airflow.decorators import task
+@task()
+def _transform_water_level_row(arr, dct, response_columns):
     for col in response_columns:
         if col[0] == 'f':
             arr.append(dct['f'].split(",")[int(col[2])])
         else:
             arr.append(dct[col])
     return arr
-    
-def transform_water_level(stations, data):
+@task()
+def _transform_water_level(stations, data):
     res = []
     
     i = 0
@@ -55,7 +56,8 @@ def transform_water_level(stations, data):
     #     f = data['@f'].split(',')
     #     return [[station_id ,data['@t'], data['@v'], data['@s'], f[1], f[2], f[3]]]
 
-def transform_water_temperature(stations, data):
+@task()
+def _transform_water_temperature(stations, data):
     i = 0
     for station in stations:
         station_id = station['ID']
@@ -98,8 +100,8 @@ def transform_water_temperature(stations, data):
     #     data = xmltodict.parse(data)['data']['observations']['wt']
     #     f = data['@f'].split(',')
     #     return [[station_id ,data['@t'], data['@v'], f[0], f[1], f[2]]]     
-
-def transform_station_info(stations, data):
+@task()
+def _transform_station_info(stations, data):
     res = []
     for i in range(0, len(stations)):
 

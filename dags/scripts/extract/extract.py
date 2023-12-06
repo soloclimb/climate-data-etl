@@ -3,8 +3,8 @@ from urllib import request
 import logging
 from airflow.decorators import task
 
-@task()
-def extract_data(stations, station_urls, product_urls, headers):
+@task(multiple_outputs=True)
+def _extract_data(stations, station_urls, product_urls, headers):
     station_info, product_data = [], []
     for i in range(0, len(stations)):
         
