@@ -16,39 +16,31 @@
     "API": {
         "wl": {
             "stations": {
-                "Kawaihae, HI": {
-                    "ID": "1617433",
+                "Hilo, Hilo Bay, Kuhio Bay, HI": {
+                    "ID": "1617760",
                     "DATUM": "STND",
-                    "STATION_INFO_FORMAT": "json",
-                    "PRODUCT_FORMAT": "csv",
-                    "DATE": "latest"
+                    "STATION_INFO_FORMAT": "xml",
+                    "PRODUCT_FORMAT": "xml",
+                    "DATE": "today"
                 }
 
             }
         },
         "wt": {
             "stations": {
-                
-                "Hilo, Hilo Bay, Kuhio Bay, HI": {
-                    "ID": "1617760",
+                "Kahului, Kahului Harbor, HI": {
+                    "ID": "1615680",
                     "DATUM": "STND",
                     "STATION_INFO_FORMAT": "xml",
                     "PRODUCT_FORMAT": "xml",
-                    "DATE": "latest"
+                    "DATE": "today"
                 },
-                "Kawaihae, HI": {
-                    "ID": "1617433",
+                "Mokuoloe, HI": {
+                    "ID": "1612480",
                     "DATUM": "STND",
                     "STATION_INFO_FORMAT": "json",
                     "PRODUCT_FORMAT": "csv",
-                    "DATE": "latest"
-                },
-                "Honolulu, HI": {
-                    "ID": "1612340",
-                    "DATUM": "STND",
-                    "STATION_INFO_FORMAT": "json",
-                    "PRODUCT_FORMAT": "json",
-                    "DATE": "latest"
+                    "DATE": "today"
                 }
             }
         },

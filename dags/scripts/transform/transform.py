@@ -25,8 +25,9 @@ def _transform_water_level(config, product_data):
         
         elif station['PRODUCT_FORMAT'] == 'xml':
             data = xmltodict.parse(product_data[i])['data']['observations']['wl']
-            f = data['@f'].split(',')
-            res.append([station_id ,data['@t'], data['@v'], data['@s'], f[1], f[2], f[3]])
+            for wl in data:
+                f = wl['@f'].split(',')
+                res.append([station_id ,wl['@t'], wl['@v'], wl['@s'], f[1], f[2], f[3]])
         i += 1
 
     return res
@@ -54,8 +55,9 @@ def _transform_water_temperature(config, product_data):
         
         elif station['PRODUCT_FORMAT'] == 'xml':
             data = xmltodict.parse(product_data[i])['data']['observations']['wt']
-            f = data['@f'].split(',')
-            return [[station_id ,data['@t'], data['@v'], f[0], f[1], f[2]]]    
+            for wl in data:    
+                f = wl['@f'].split(',')
+                return [[station_id ,wl['@t'], wl['@v'], f[0], f[1], f[2]]]    
         i += 1
 
     return res
