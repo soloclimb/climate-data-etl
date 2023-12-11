@@ -1,0 +1,8 @@
+2023-12-11 20:04:27,009 - transform - INFO - Successfully transformed water level data, station id: 1617760
+2023-12-11 20:08:36,708 - transform - ERROR - Error occured while transfroming water temperature data: list index out of range
+2023-12-11 20:08:37,428 - transform - INFO - Successfully transformed water level data, station id: 1617760
+2023-12-11 20:08:40,884 - transform - ERROR - Error occured while transfroming water temperature data: list index out of range
+2023-12-11 20:25:13,841 - transform - INFO - Successfully transformed water level data, station id: 1617760
+2023-12-11 20:25:14,176 - transform - INFO - Successfully transformed station info data, station id: 1617760
+2023-12-11 20:25:17,633 - transform - INFO - Successfully transformed station info data, station id: 1615680
+2023-12-11 20:25:17,634 - transform - INFO - Successfully transformed station info data, station id: 1612480

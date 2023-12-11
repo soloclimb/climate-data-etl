@@ -4,7 +4,7 @@ import logging
 from airflow.decorators import task
 
 @task(multiple_outputs=True)
-def _extract_data(config):
+def _extract_data(config, logger):
     stations = config['stations']
     station_urls = config['station_urls']
     product_urls = config['product_urls']
@@ -28,7 +28,9 @@ def _extract_data(config):
                 data = res.read().decode('utf-8')
                 res.close()
                 product_data.append(data)
-            
+
+            logger.info(f"Successfull get request to {product_urls[i]}")
+
             if station_info_format == 'json':
                 res = requests.get(url=station_urls[i], headers=headers)  
                 station_info.append(res.json())
@@ -39,22 +41,24 @@ def _extract_data(config):
                 res.close()
                 station_info.append(data)
             
+            logger.info(f"Successfull get request to {station_urls[i]}")
+
         except requests.exceptions.Timeout as e:
-            logging.error(f"Request timed out: {e}")
+            logger.error(f"Request timed out: {e}")
             return None
         except requests.exceptions.HTTPError as e:
-            logging.error(f"HTTP error occured: {e}")
+            logger.error(f"HTTP error occured: {e}")
             return None  
         except requests.exceptions.ConnectionError as e:
-            logging.error(f"Failed to establish a connection: {e}")
+            logger.error(f"Failed to establish a connection: {e}")
             return None 
         except requests.exceptions.RequestException as e:
-            logging.error(f"Request failed: {e}")
+            logger.error(f"Request failed: {e}")
             return None 
         
     return {'station_info': station_info, 'product_data': product_data}
 
-def make_get_request(url, headers, format):    
+def make_get_request(url, headers, format, logger):    
     try:
         if format == 'csv':
             res = request.urlopen(url)
@@ -62,29 +66,28 @@ def make_get_request(url, headers, format):
         
         elif format == 'json':
             res = requests.get(url=url, headers=headers)
-            if res.status_code == 200:
-                logging.info(f"Successfull get request to url: {url}")
-                
-            res.raise_for_status()
-                
             return res.json()
+        
         elif format == 'xml':
             res = request.urlopen(url)
             data = res.read().decode('utf-8')
             res.close()
             return data
         
+        logger.info(f"Successfull get request to {url}")
+
+        
     except requests.exceptions.Timeout as e:
-        logging.error(f"Request timed out: {e}")
+        logger.error(f"Request timed out: {e}")
         return None
     except requests.exceptions.HTTPError as e:
-        logging.error(f"HTTP error occured: {e}")
+        logger.error(f"HTTP error occured: {e}")
         return None  
     except requests.exceptions.ConnectionError as e:
-        logging.error(f"Failed to establish a connection: {e}")
+        logger.error(f"Failed to establish a connection: {e}")
         return None 
     except requests.exceptions.RequestException as e:
-        logging.error(f"Request failed: {e}")
+        logger.error(f"Request failed: {e}")
         return None 
     
 

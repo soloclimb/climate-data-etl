@@ -1,6 +1,6 @@
 from airflow.decorators import task
 from airflow.operators.python import get_current_context
-import logging
+
 @task()
 def parse_config(config, product):
 
@@ -21,3 +21,5 @@ def parse_config(config, product):
             'station_urls': station_urls,
             'product_urls': product_urls,
             'stations': stations_arr}
+
+
