@@ -14,36 +14,31 @@
         "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/119.0"
     },
     "API": {
-        "wl": {
-            "stations": {
-                "Hilo, Hilo Bay, Kuhio Bay, HI": {
-                    "ID": "1617760",
-                    "DATUM": "STND",
-                    "STATION_INFO_FORMAT": "xml",
-                    "PRODUCT_FORMAT": "xml",
-                    "DATE": "today"
-                }
+        "stations": {
+            "Hilo, Hilo Bay, Kuhio Bay, HI": {
+                "ID": "1617760",
+                "DATUM": "STND",
+                "PRODUCTS": [{"product": "water_temperature", "format": "csv"}, {"product": "water_level", "format": "xml"}],
+                "STATION_INFO_FORMAT": "xml",
+                "DATE": "today"
+            },
+            "Kahului, Kahului Harbor, HI": {
+                "ID": "1615680",
+                "DATUM": "STND",
+                "PRODUCTS": [{"product": "water_level", "format": "xml"}, {"product": "water_temperature", "format": "json"}],
+                "STATION_INFO_FORMAT": "xml",
+                "DATE": "today"
+            },
+            "Mokuoloe, HI": {
+                "ID": "1612480",
+                "DATUM": "STND",
+                "PRODUCTS": [{"product": "water_level", "format": "json"}, {"product": "water_temperature", "format": "csv"}],
+                "STATION_INFO_FORMAT": "json",
+                "DATE": "today"
+            }
 
-            }
         },
-        "wt": {
-            "stations": {
-                "Kahului, Kahului Harbor, HI": {
-                    "ID": "1615680",
-                    "DATUM": "STND",
-                    "STATION_INFO_FORMAT": "xml",
-                    "PRODUCT_FORMAT": "xml",
-                    "DATE": "today"
-                },
-                "Mokuoloe, HI": {
-                    "ID": "1612480",
-                    "DATUM": "STND",
-                    "STATION_INFO_FORMAT": "json",
-                    "PRODUCT_FORMAT": "csv",
-                    "DATE": "today"
-                }
-            }
-        },
+
         "station_info_response_columns": ["id", "name", "lat", "lon", "state", "timezone", "products"],
         "wl_response_columns": ["t", "v", "s", "f[1]", "f[2]", "f[3]"],
         "wt_response_columns": ["t", "v", "f[0]", "f[1]", "f[2]"]

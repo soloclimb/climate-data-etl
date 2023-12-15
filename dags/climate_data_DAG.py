@@ -46,7 +46,14 @@ def climate_data_etl():
         current_dir = os.path.dirname(os.path.abspath(__file__))
         config_path = os.path.join(current_dir, "../config", "config.json")
         with open (config_path, "r") as config:
-            return json.load(config)
+            config = json.load(config)
+            return {'headers': config['API_HEADERS'],
+                'stations': config['API']['stations']}
+
+
+
+        
+
 
     @task()    
     def load_into_db(logger, insert_data, query, if_station_data=None):
