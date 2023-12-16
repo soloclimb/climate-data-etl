@@ -10,7 +10,7 @@ import sys
 
 sys.path.append('/home/soloclimb/projects/climate-data-airflow/')
 
-from scripts.utils.utils import parse_config
+from scripts.utils.utils import check_data_inventory
 from scripts.extract.extract import _extract_data
 from scripts.transform.transform import _transform_station_info, _transform_water_level, _transform_water_temperature
 
@@ -25,7 +25,7 @@ default_args = {
 }
 
 
-@dag("climate_data_DAG_v11", start_date=datetime(2023, 11, 30), 
+@dag("climate_data_DAG", start_date=datetime(2023, 11, 30), 
          schedule_interval="*/6 * * * *", catchup=False)
 def climate_data_etl():
     def create_logger(name, logging_dest_path):
@@ -71,21 +71,20 @@ def climate_data_etl():
         logger.info("Successfully loaded data to database")
         cursor.close()
         conn.close()
-
-    config = create_config()      
-    wl_config = parse_config(config=config, product='wl')
-    wt_config = parse_config(config=config, product='wt')
-
     extract_logger = create_logger('extract', logging_path)
-    wl_data = _extract_data(wl_config, extract_logger)
-    wt_data = _extract_data(wt_config, extract_logger)
+
+    config = create_config()
+    config = check_data_inventory(config, extract_logger)      
+
+    wl_data = _extract_data(config, extract_logger)
+    wt_data = _extract_data(config, extract_logger)
 
     transform_logger = create_logger('transform', logging_path)
-    wl_station_info = _transform_station_info(wl_config, wl_data, transform_logger)
-    wt_station_info = _transform_station_info(wt_config, wt_data, transform_logger)
+    wl_station_info = _transform_station_info(config, wl_data, transform_logger)
+    wt_station_info = _transform_station_info(config, wt_data, transform_logger)
     
-    water_level_data = _transform_water_level(wl_config, wl_data, transform_logger)
-    water_temperature_data = _transform_water_temperature(wt_config, wt_data, transform_logger)
+    water_level_data = _transform_water_level(config, wl_data, transform_logger)
+    water_temperature_data = _transform_water_temperature(config, wt_data, transform_logger)
     
     load_logger = create_logger('load', logging_path)
     load_into_db(logger=load_logger, insert_data=wl_station_info, if_station_data=wt_station_info, query="INSERT IGNORE INTO climate_data.station_info (station_id, name, lat, lon, state, timezone, products) VALUES (%s, %s, %s, %s, %s, %s, %s)")
