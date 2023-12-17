@@ -10,7 +10,8 @@ def _extract_data(config, logger):
     product_urls = config['product_urls']
     headers = config['headers']
     i = 0
-    station_info, products_data = [], {}
+    station_info = []
+    products_data = {}
     for station in stations:
         station_info_format = stations[station]['STATION_INFO_FORMAT']
         products = stations[station]['PRODUCTS']
@@ -20,25 +21,28 @@ def _extract_data(config, logger):
                 product_format = dct['format']
 
                 product_data = []
-                if product_format == 'csv':
-                    res = request.urlopen(product_urls[product][i])
-                    product_data = res.read().decode('utf-8')
+                for j in range(0, len(product_urls[product])):
+                    if product_format == 'csv':
+                        res = request.urlopen(product_urls[product][j])
+                        product_data.append(res.read().decode('utf-8'))
+                    
+                    elif product_format == 'json':
+                        res = requests.get(url=product_urls[product][j], headers=headers)  
+                        product_data.append(res.json())
+
+                    elif product_format == 'xml':
+                        res = request.urlopen(product_urls[product][j])
+                        product_data.append(res.read().decode('utf-8'))
+                        res.close()
+
+                    logger.info(f"Successfull get request to {product_urls[product][j]}")
                 
-                elif product_format == 'json':
-                    res = requests.get(url=product_urls[product][i], headers=headers)  
-                    product_data = res.json()
-
-                elif product_format == 'xml':
-                    res = request.urlopen(product_urls[product][i])
-                    product_data = res.read().decode('utf-8')
-                    res.close()
-
+                logger.info(product_data)
                 if product in products_data:
-                    products_data[product] += product_data
+                    products_data[product] = products_data[product] + product_data
                 else:
                     products_data[product] = product_data
 
-                logger.info(f"Successfull get request to {product_urls[product][i]}")
 
             if station_info_format == 'json':
                 res = requests.get(url=station_urls[i], headers=headers)  
@@ -49,7 +53,7 @@ def _extract_data(config, logger):
                 data = res.read().decode('utf-8')
                 res.close()
                 station_info.append(data)
-            
+            logger.info(station_info)
             logger.info(f"Successfull get request to {station_urls[i]}")
             
             i += 1

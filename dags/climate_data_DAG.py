@@ -56,9 +56,7 @@ def climate_data_etl():
 
 
     @task()    
-    def load_into_db(logger, insert_data, query, if_station_data=None):
-        if if_station_data:
-            insert_data = insert_data + if_station_data
+    def load_into_db(logger, insert_data, query):
         hook = MySqlHook(mysql_conn_id='climate-data-mysql')
         conn = hook.get_conn()
         cursor = conn.cursor()
@@ -76,18 +74,17 @@ def climate_data_etl():
     config = create_config()
     config = check_data_inventory(config, extract_logger)      
 
-    wl_data = _extract_data(config, extract_logger)
-    wt_data = _extract_data(config, extract_logger)
+    extracted_data = _extract_data(config, extract_logger)
 
     transform_logger = create_logger('transform', logging_path)
-    wl_station_info = _transform_station_info(config, wl_data, transform_logger)
-    wt_station_info = _transform_station_info(config, wt_data, transform_logger)
     
-    water_level_data = _transform_water_level(config, wl_data, transform_logger)
-    water_temperature_data = _transform_water_temperature(config, wt_data, transform_logger)
+    station_info = _transform_station_info(config, extracted_data, transform_logger)
+    
+    water_level_data = _transform_water_level(config, extracted_data, transform_logger)
+    water_temperature_data = _transform_water_temperature(config, extracted_data, transform_logger)
     
     load_logger = create_logger('load', logging_path)
-    load_into_db(logger=load_logger, insert_data=wl_station_info, if_station_data=wt_station_info, query="INSERT IGNORE INTO climate_data.station_info (station_id, name, lat, lon, state, timezone, products) VALUES (%s, %s, %s, %s, %s, %s, %s)")
+    load_into_db(logger=load_logger, insert_data=station_info, query="INSERT IGNORE INTO climate_data.station_info (station_id, name, lat, lon, state, timezone, products) VALUES (%s, %s, %s, %s, %s, %s, %s)")
     load_into_db(logger=load_logger, insert_data=water_level_data, query="INSERT IGNORE INTO climate_data.water_level (station_id, record_time, water_level, sigma, water_level_inferred, flat_tolerance_exceeded, expected_water_level_exceeded) VALUES (%s, %s, %s, %s, %s, %s, %s)")
     load_into_db(logger=load_logger, insert_data=water_temperature_data, query="INSERT IGNORE INTO climate_data.water_temperature (station_id, record_time, water_temperature, max_conductivity_exceeded, min_conductivity_exceeded, change_tolerance_limit_exceeded) VALUES (%s, %s, %s, %s, %s, %s)")
 

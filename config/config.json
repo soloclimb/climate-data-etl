@@ -15,6 +15,13 @@
     },
     "API": {
         "stations": {
+            "Honolulu, HI": {
+                "ID": "1612340",
+                "DATUM": "STND",
+                "PRODUCTS": [{"product": "water_temperature", "format": "csv"}, {"product": "water_level", "format": "xml"}],
+                "STATION_INFO_FORMAT": "xml",
+                "DATE": "today"
+            },
             "Hilo, Hilo Bay, Kuhio Bay, HI": {
                 "ID": "1617760",
                 "DATUM": "STND",

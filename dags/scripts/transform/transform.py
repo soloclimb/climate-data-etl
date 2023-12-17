@@ -3,7 +3,10 @@ import xmltodict
 from io import StringIO
 from airflow.decorators import task
 
-@task()
+@task(multiple_outputs=True)
+def transform_product(config, extracted_data, logger):
+    pass
+
 def _transform_water_level(config, product_data, logger):
     try:
         stations = config['stations']
@@ -39,7 +42,6 @@ def _transform_water_level(config, product_data, logger):
 
    
 
-@task()
 def _transform_water_temperature(config, product_data, logger):
     try:
         stations = config['stations']

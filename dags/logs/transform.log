@@ -6,3 +6,5 @@
 2023-12-11 20:25:14,176 - transform - INFO - Successfully transformed station info data, station id: 1617760
 2023-12-11 20:25:17,633 - transform - INFO - Successfully transformed station info data, station id: 1615680
 2023-12-11 20:25:17,634 - transform - INFO - Successfully transformed station info data, station id: 1612480
+2023-12-17 21:18:03,371 - transform - ERROR - Error occured while transfroming wl: 'XComArg' object is not iterable
+2023-12-17 21:18:03,372 - transform - ERROR - Error occured while transfroming water temperature data: 'XComArg' object is not iterable
