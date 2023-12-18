@@ -18,7 +18,7 @@
             "Honolulu, HI": {
                 "ID": "1612340",
                 "DATUM": "STND",
-                "PRODUCTS": [{"product": "water_temperature", "format": "csv"}, {"product": "water_level", "format": "xml"}],
+                "PRODUCTS": [{"product": "water_temperature", "format": "json"}, {"product": "water_level", "format": "xml"}],
                 "STATION_INFO_FORMAT": "xml",
                 "DATE": "today"
             },

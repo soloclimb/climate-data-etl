@@ -3,6 +3,8 @@ from urllib import request
 import logging
 from airflow.decorators import task
 
+
+
 @task(multiple_outputs=True)
 def _extract_data(config, logger):
     stations = config['stations']
@@ -19,20 +21,22 @@ def _extract_data(config, logger):
             for dct in products:
                 product = dct['product']
                 product_format = dct['format']
-
+                logger.info(dct)
                 product_data = []
                 for j in range(0, len(product_urls[product])):
+                    logger.info(product_urls[product][j])
                     if product_format == 'csv':
-                        res = request.urlopen(product_urls[product][j])
-                        product_data.append(res.read().decode('utf-8'))
+                        res = requests.get(url=product_urls[product][j], headers=headers)
+                        logger.info(f"Raw response content: {res.text}")
+                        product_data.append(res.content.decode('utf-8'))
                     
                     elif product_format == 'json':
                         res = requests.get(url=product_urls[product][j], headers=headers)  
                         product_data.append(res.json())
 
                     elif product_format == 'xml':
-                        res = request.urlopen(product_urls[product][j])
-                        product_data.append(res.read().decode('utf-8'))
+                        res = requests.get(url=product_urls[product][j], headers=headers)
+                        product_data.append(res.content.decode('utf-8'))
                         res.close()
 
                     logger.info(f"Successfull get request to {product_urls[product][j]}")
@@ -49,9 +53,8 @@ def _extract_data(config, logger):
                 station_info.append(res.json())
             
             elif station_info_format == 'xml':
-                res = request.urlopen(station_urls[i])
-                data = res.read().decode('utf-8')
-                res.close()
+                res = requests.get(station_urls[i])
+                data = res.content.decode('utf-8')
                 station_info.append(data)
             logger.info(station_info)
             logger.info(f"Successfull get request to {station_urls[i]}")

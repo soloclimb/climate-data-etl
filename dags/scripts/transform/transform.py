@@ -5,35 +5,40 @@ from airflow.decorators import task
 
 @task(multiple_outputs=True)
 def transform_product(config, extracted_data, logger):
-    pass
-
+    for product in extracted_data:
+        if product == 'water_level':
+            extracted_data['water_level'] = _transform_water_level(config, extracted_data['water_level'], logger)
+        elif product == 'water_temperature':
+            extracted_data['water_temperature'] =  _transform_water_temperature(config, extracted_data['water_temperature'], logger)
 def _transform_water_level(config, product_data, logger):
     try:
         stations = config['stations']
-        product_data = product_data['product_data']
         res = []
         i = 0
         for station in stations:
             station_id = station['ID']
-            if station['PRODUCT_FORMAT'] == "json":
-                for dct in product_data:
-                    dct = dct['data'][0]
-                    f = dct['f'].split(',')
-                    res.append([station_id, dct['t'] + ":00", dct['v'], dct['s'], f[1], f[2], f[3]])                        
+            products = stations[station]['PRODUCTS']
+            for dct in products:
+                product_format = dct['format']
+                if product_format == "json":
+                    for dct in product_data:
+                        dct = dct['data'][0]
+                        f = dct['f'].split(',')
+                        res.append([station_id, dct['t'] + ":00", dct['v'], dct['s'], f[1], f[2], f[3]])                        
 
-            elif station['PRODUCT_FORMAT'] == "csv":
-                csv_file = StringIO(product_data[i])
-                reader = csv.reader(csv_file)
-                for row in reader:
-                    res.append([station['ID']] + [row[x] for x in range(0, 7) if x != 3])
-            
-            elif station['PRODUCT_FORMAT'] == 'xml':
-                data = xmltodict.parse(product_data[i])['data']['observations']['wl']
-                for wl in data:
-                    f = wl['@f'].split(',')
-                    res.append([station_id ,wl['@t'], wl['@v'], wl['@s'], f[1], f[2], f[3]])
-            
-            logger.info(f"Successfully transformed water level data, station id: {station['ID']}")
+                elif product_format == "csv":
+                    csv_file = StringIO(product_data[i])
+                    reader = csv.reader(csv_file)
+                    for row in reader:
+                        res.append([station['ID']] + [row[x] for x in range(0, 7) if x != 3])
+                
+                elif product_format == 'xml':
+                    data = xmltodict.parse(product_data[i])['data']['observations']['wl']
+                    for wl in data:
+                        f = wl['@f'].split(',')
+                        res.append([station_id ,wl['@t'], wl['@v'], wl['@s'], f[1], f[2], f[3]])
+                
+            logger.info(f"Successfully transformed water level data, station id: {station_id}")
             i += 1
         return res
 
@@ -45,28 +50,30 @@ def _transform_water_level(config, product_data, logger):
 def _transform_water_temperature(config, product_data, logger):
     try:
         stations = config['stations']
-        product_data = product_data['product_data']
         res = []
         i = 0
         for station in stations:
             station_id = station['ID']
-            if station['PRODUCT_FORMAT'] == "json":
-                for dct in product_data:
-                    dct = dct['data'][0]
-                    f = dct['f'].split(',')
-                    res.append([station_id, dct['t'] + ":00", dct['v'], f[0], f[1], f[2]])                        
+            products = stations[station]['PRODUCTS']
+            for dct in products:
+                product_format = dct['format']
+                if product_format == "json":
+                    for dct in product_data:
+                        dct = dct['data'][0]
+                        f = dct['f'].split(',')
+                        res.append([station_id, dct['t'] + ":00", dct['v'], f[0], f[1], f[2]])                        
 
-            elif station['PRODUCT_FORMAT'] == "csv":
-                csv_file = StringIO(product_data[i])
-                reader = csv.reader(csv_file)
-                for row in reader:
-                    res.append([station_id] + row)
-            
-            elif station['PRODUCT_FORMAT'] == 'xml':
-                data = xmltodict.parse(product_data[i])['data']['observations']['wt']
-                for wl in data:    
-                    f = wl['@f'].split(',')
-                    return [[station_id ,wl['@t'], wl['@v'], f[0], f[1], f[2]]]    
+                elif product_format == "csv":
+                    csv_file = StringIO(product_data[i])
+                    reader = csv.reader(csv_file)
+                    for row in reader:
+                        res.append([station_id] + row)
+                
+                elif product_format == 'xml':
+                    data = xmltodict.parse(product_data[i])['data']['observations']['wt']
+                    for wl in data:    
+                        f = wl['@f'].split(',')
+                        return [[station_id ,wl['@t'], wl['@v'], f[0], f[1], f[2]]]    
             
             logger.info(f"Successfully transformed water temperature data, station id: {station['ID']}")
             i += 1

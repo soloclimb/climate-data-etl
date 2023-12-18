@@ -12,7 +12,7 @@ sys.path.append('/home/soloclimb/projects/climate-data-airflow/')
 
 from scripts.utils.utils import check_data_inventory
 from scripts.extract.extract import _extract_data
-from scripts.transform.transform import _transform_station_info, _transform_water_level, _transform_water_temperature
+from scripts.transform.transform import _transform_station_info, transform_product
 
 
 logging_path = './dags/logs/'
@@ -25,7 +25,7 @@ default_args = {
 }
 
 
-@dag("climate_data_DAG", start_date=datetime(2023, 11, 30), 
+@dag("climate_data_DAG_01", start_date=datetime(2023, 11, 30), 
          schedule_interval="*/6 * * * *", catchup=False)
 def climate_data_etl():
     def create_logger(name, logging_dest_path):
@@ -56,6 +56,7 @@ def climate_data_etl():
 
 
     @task()    
+    
     def load_into_db(logger, insert_data, query):
         hook = MySqlHook(mysql_conn_id='climate-data-mysql')
         conn = hook.get_conn()
@@ -69,6 +70,7 @@ def climate_data_etl():
         logger.info("Successfully loaded data to database")
         cursor.close()
         conn.close()
+
     extract_logger = create_logger('extract', logging_path)
 
     config = create_config()
@@ -80,12 +82,9 @@ def climate_data_etl():
     
     station_info = _transform_station_info(config, extracted_data, transform_logger)
     
-    water_level_data = _transform_water_level(config, extracted_data, transform_logger)
-    water_temperature_data = _transform_water_temperature(config, extracted_data, transform_logger)
+    products_data = transform_product(config, extracted_data, transform_logger)
     
     load_logger = create_logger('load', logging_path)
     load_into_db(logger=load_logger, insert_data=station_info, query="INSERT IGNORE INTO climate_data.station_info (station_id, name, lat, lon, state, timezone, products) VALUES (%s, %s, %s, %s, %s, %s, %s)")
-    load_into_db(logger=load_logger, insert_data=water_level_data, query="INSERT IGNORE INTO climate_data.water_level (station_id, record_time, water_level, sigma, water_level_inferred, flat_tolerance_exceeded, expected_water_level_exceeded) VALUES (%s, %s, %s, %s, %s, %s, %s)")
-    load_into_db(logger=load_logger, insert_data=water_temperature_data, query="INSERT IGNORE INTO climate_data.water_temperature (station_id, record_time, water_temperature, max_conductivity_exceeded, min_conductivity_exceeded, change_tolerance_limit_exceeded) VALUES (%s, %s, %s, %s, %s, %s)")
 
 dag_instance = climate_data_etl()

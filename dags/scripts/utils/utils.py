@@ -33,9 +33,9 @@ def check_data_inventory(config, logger):
     columns = cursor.fetchall()
 
     data_inventory = [column[0] for column in columns]
-
+    stations = {}
     for station in config['stations']:
-
+        station_name = station
         station = config['stations'][station]
         station_urls.append(f"https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/{station['ID']}.{station['STATION_INFO_FORMAT']}?expand=details,products&units=english")
 
@@ -57,11 +57,13 @@ def check_data_inventory(config, logger):
                             product_urls[product].append(link)
                         else:
                             product_urls[product] = [link]
-
+                        
+                        if station_name not in stations:
+                            stations[station_name] = station
 
     cursor.close()
     conn.close()
     return {"headers": config['headers'],
-            "stations": config['stations'],
+            "stations": stations,
             "product_urls": product_urls,
             "station_urls": station_urls}
