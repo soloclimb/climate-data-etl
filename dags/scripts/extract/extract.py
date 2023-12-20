@@ -74,7 +74,7 @@ def _extract_data(config, logger):
             logger.error(f"Request failed: {e}")
             return None 
         
-    return {'station_info': station_info, 'product_data': product_data}
+    return {'station_info': station_info, 'product_data': products_data}
 
 def make_get_request(url, headers, format, logger):    
     try:
