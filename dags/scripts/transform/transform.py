@@ -63,8 +63,7 @@ def _transform_water_temperature(config, product_data, logger):
                 if dct['product'] == 'water_temperature':
                     product_format = dct['format']
                     if product_format == "json":
-                        for dct in product_data:
-                            dct = dct['data'][0]
+                        for dct in product_data[i]['data']:
                             f = dct['f'].split(',')
                             res.append([station_id, dct['t'] + ":00", dct['v'], f[0], f[1], f[2]])                        
 

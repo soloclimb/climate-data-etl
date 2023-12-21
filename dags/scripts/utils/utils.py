@@ -22,7 +22,6 @@ def parse_config(config):
             'product_urls': product_urls,
             'stations': stations_arr}
 
-
 @task(multiple_outputs=True)
 def check_data_inventory(config, logger):
     product_urls, station_urls = {}, []
@@ -66,4 +65,5 @@ def check_data_inventory(config, logger):
     return {"headers": config['headers'],
             "stations": stations,
             "product_urls": product_urls,
-            "station_urls": station_urls}
+            "station_urls": station_urls,
+            "load_queries": config['load_queries']}

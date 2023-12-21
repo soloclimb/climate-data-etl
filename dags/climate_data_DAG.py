@@ -1,6 +1,6 @@
 from airflow.decorators import task, dag
 from airflow.operators.python import get_current_context
-from airflow.hooks.mysql_hook import MySqlHook
+
 from datetime import datetime,  timedelta
 
 import os 
@@ -13,7 +13,7 @@ sys.path.append('/home/soloclimb/projects/climate-data-airflow/')
 from scripts.utils.utils import check_data_inventory
 from scripts.extract.extract import _extract_data
 from scripts.transform.transform import _transform_station_info, transform_product
-
+from scripts.load.load import load
 
 logging_path = './dags/logs/'
 
@@ -25,7 +25,7 @@ default_args = {
 }
 
 
-@dag("climate_data_DAG_01", start_date=datetime(2023, 11, 30), 
+@dag("climate_data_DAG", start_date=datetime(2023, 11, 30), 
          schedule_interval="*/6 * * * *", catchup=False)
 def climate_data_etl():
     def create_logger(name, logging_dest_path):
@@ -48,29 +48,9 @@ def climate_data_etl():
         with open (config_path, "r") as config:
             config = json.load(config)
             return {'headers': config['API_HEADERS'],
-                'stations': config['API']['stations']}
-
-
-
+                'stations': config['API']['stations'],
+                'load_queries': config['LOAD_QUERIES']}
         
-
-
-    @task()    
-    
-    def load_into_db(logger, insert_data, query):
-        hook = MySqlHook(mysql_conn_id='climate-data-mysql')
-        conn = hook.get_conn()
-        cursor = conn.cursor()
-        for arr in insert_data:
-
-            cursor.execute(query, arr)
-            conn.commit()
-
-
-        logger.info("Successfully loaded data to database")
-        cursor.close()
-        conn.close()
-
     extract_logger = create_logger('extract', logging_path)
 
     config = create_config()
@@ -80,11 +60,12 @@ def climate_data_etl():
 
     transform_logger = create_logger('transform', logging_path)
     
-    station_info = _transform_station_info(config, extracted_data, transform_logger)
+    stations_info = _transform_station_info(config, extracted_data, transform_logger)
     
-    products_data = transform_product(config, extracted_data, transform_logger)
-    
+    products_data = transform_product(config, extracted_data['product_data'], transform_logger)
+
     load_logger = create_logger('load', logging_path)
-    load_into_db(logger=load_logger, insert_data=station_info, query="INSERT IGNORE INTO climate_data.station_info (station_id, name, lat, lon, state, timezone, products) VALUES (%s, %s, %s, %s, %s, %s, %s)")
+
+    load(logger=load_logger, stations_info=stations_info, products_data=products_data, load_queries=config['load_queries'])
 
 dag_instance = climate_data_etl()
