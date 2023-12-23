@@ -1,12 +1,15 @@
 import requests
 from urllib import request
+from typing import Dict, List, Union
 import logging
 from airflow.decorators import task
 
-
+ExtractedData = Dict[str, Union[List[str], List[Dict[str, str]]]]
+ConfigData = Dict[str, Union[List[Dict[str, str]], Dict[str, str]]]
+GetResponse = Union[str, Dict[str, str], None]
 
 @task(multiple_outputs=True)
-def _extract_data(config, logger):
+def _extract_data(config: ConfigData, logger: logging.Logger) -> ExtractedData:   
     stations = config['stations']
     station_urls = config['station_urls']
     product_urls = config['product_urls']
@@ -76,7 +79,7 @@ def _extract_data(config, logger):
         
     return {'station_info': station_info, 'product_data': products_data}
 
-def make_get_request(url, headers, format, logger):    
+def make_get_request(url: str, headers: Dict[str, str], format: str, logger: logging.Logger) -> GetResponse:    
     try:
         if format == 'csv':
             res = request.urlopen(url)
