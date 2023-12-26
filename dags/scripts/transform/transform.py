@@ -2,17 +2,28 @@ import csv
 import xmltodict
 from io import StringIO
 from airflow.decorators import task
+from typing import Dict, List, Union
+import logging
+
+ConfigData = Dict[str, Union[List[Dict[str, str]], Dict[str, str]]]
+ExtractedData = Dict[str, Union[List[str], List[Dict[str, Union[str, str]]]]]
+LoggerType = logging.Logger
+TransformedData = Dict[str, Union[List[str], List[Dict[str, Union[str, str]]]]]
+TransformedProductData = List[List[Union[str, int, float]]]
+StationData = List[List[Union[str, int, float]]]
+StationInfoData = List[List[Union[str, int, float]]]
+ProductData = List[Union[str, str]]
+StationsData = Dict[str, Union[str, List[Dict[str, Union[str, str]]]]]
 
 @task(multiple_outputs=True)
-def transform_product(config, extracted_data, logger):
+def transform_product(config: ConfigData, extracted_data: ExtractedData, logger: LoggerType) -> TransformedData:
     for product, product_data in extracted_data.items():
         if product == 'water_level':
             extracted_data['water_level'] = _transform_water_level(config, extracted_data['water_level'], logger)
         elif product == 'water_temperature':
             extracted_data['water_temperature'] =  _transform_water_temperature(config, extracted_data['water_temperature'], logger)
     return extracted_data
-
-def _transform_water_level(config, product_data, logger):
+def _transform_water_level(config: ConfigData, product_data: ProductData, logger: LoggerType) -> TransformedProductData:
     try:
         stations = config['stations']
         res = []
@@ -51,7 +62,7 @@ def _transform_water_level(config, product_data, logger):
 
    
 
-def _transform_water_temperature(config, product_data, logger):
+def _transform_water_temperature(config: ConfigData, product_data: ProductData, logger: LoggerType) -> TransformedProductData:    
     res = []
     try:
         stations = config['stations']
@@ -88,7 +99,7 @@ def _transform_water_temperature(config, product_data, logger):
     
     return res
 @task()
-def _transform_station_info(config, stations_data, logger):
+def _transform_station_info(config: ConfigData, stations_data: StationsData, logger: LoggerType) -> StationInfoData:    
     try:
         stations = config['stations']
         stations_data = stations_data['station_info']
